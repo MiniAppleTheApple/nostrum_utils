@@ -27,3 +27,4 @@ nostrum_boilerplate-*.tar
 
 # Dev config
 .env
+.DS_Store
