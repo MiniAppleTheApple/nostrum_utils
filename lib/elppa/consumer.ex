@@ -2,6 +2,8 @@ defmodule Elppa.Consumer do
   @moduledoc false
   use Nostrum.Consumer
 
+  alias Nostrum.Api
+
   alias Elppa.Commands
 
   def start_link do
@@ -14,7 +16,16 @@ defmodule Elppa.Consumer do
   end
 
   def handle_event({:INTERACTION_CREATE, interaction, _ws_state}) do
-    Commands.handle_interaction(interaction)
+    if interaction.type == 3 do
+      Api.create_interaction_response!(interaction, %{
+        type: 4,
+        data: %{
+          content: "<@#{interaction.data.custom_id}>",
+        }
+      })
+    else
+      Commands.handle_interaction(interaction)
+    end
   end
 
   def handle_event(_data) do

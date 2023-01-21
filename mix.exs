@@ -24,6 +24,8 @@ defmodule NekoPreto.MixProject do
     [
       {:dotenv_parser, "~> 2.0"},
       {:nostrum, github: "Kraigie/nostrum"},
+      {:hackney, github: "benoitc/hackney", branch: "master"},
+      {:toml, "~> 0.7"}
     ]
   end
 end

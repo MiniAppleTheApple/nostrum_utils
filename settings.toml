@@ -1,0 +1,58 @@
+[embed]
+title = "Title"
+description = "Description"
+color = 0xffffff 
+timestamp = "2007-07-26"
+
+  [embed.thumbnail]
+  url = "https://cdn.shopify.com/s/files/1/0280/3931/5529/products/TH80ISO_1_06acecf8-138e-4113-a413-02ca33741e01.jpg?v=1666581520"
+  width = 500
+  height = 500
+
+  [embed.image]
+  url = "https://cdn.shopify.com/s/files/1/0280/3931/5529/products/TH80ISO_1_06acecf8-138e-4113-a413-02ca33741e01.jpg?v=1666581520"
+  width = 500
+  height = 500
+
+  [embed.footer]
+  text = "Footer"
+  icon_url = "https://cdn.shopify.com/s/files/1/0280/3931/5529/products/TH80ISO_1_06acecf8-138e-4113-a413-02ca33741e01.jpg?v=1666581520"
+
+  [embed.author]
+  name = "Author name"
+  url = "https://cdn.shopify.com/s/files/1/0280/3931/5529/products/TH80ISO_1_06acecf8-138e-4113-a413-02ca33741e01.jpg?v=1666581520"
+
+  [[embed.fields]]
+  name = "example field"
+  value = "example value"
+  inline = true
+
+  [[embed.fields]]
+  name = "example field"
+  value = "example value"
+  inline = false
+
+[[buttons]]
+style = 1
+label = "Example blue button"
+custom_id = "1"
+
+[[buttons]]
+style = 2
+label = "Example grey button"
+custom_id = "2"
+
+[[buttons]]
+style = 3
+label = "Example green button"
+custom_id = "3"
+
+[[buttons]]
+style = 4
+label = "Example red button"
+custom_id = "4"
+
+[[buttons]]
+style = 5
+label = "Example link button"
+url = "https://cdn.shopify.com/s/files/1/0280/3931/5529/products/TH80ISO_1_06acecf8-138e-4113-a413-02ca33741e01.jpg?v=1666581520"
