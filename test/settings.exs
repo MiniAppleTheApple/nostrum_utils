@@ -2,8 +2,6 @@ defmodule Elppa.Test.Settings do
   use ExUnit.Case
 
   alias Elppa.Settings
-  alias Nostrum.Struct.Embed
-  alias Nostrum.Struct.Component
 
   @example %{
    "buttons" => [
