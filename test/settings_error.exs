@@ -58,7 +58,7 @@ defmodule Elppa.Test.SettingsError do
 
   test "Attribute not found", %{attribute: attribute} do
     result = "
-[資料錯誤] 未能找到#{attribute}，請檢查你的各式是否符合。"
+[資料錯誤] 未能找到#{attribute}，請檢查你的格式是否符合。"
 
     assert result == SettingsError.to_string({:attribute_not_found, "example"})
   end
