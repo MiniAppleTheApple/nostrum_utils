@@ -147,17 +147,16 @@ defmodule Elppa.Settings do
     |> Enum.flat_map(&valid_button?/1)
   end
 
-  def valid_buttons?(_), do: [{:not_a_list, "buttons"}]
+  def valid_buttons?(buttons), do: not_a_list?("buttons", buttons)
 
   @spec new(map) :: {:ok, t} | :error
-  def new(data = %{"embed" => embed, "buttons" => buttons}) do
-    errors = valid_embed?(embed) ++ valid_buttons?(buttons) 
+  def new(data) do
+    new_data = data
+    errors = valid_embed?(data["embed"]) ++ valid_buttons?(data["buttons"]) ++ required(data, ["embed", "buttons"], "") 
     if errors == [] do
       {:ok, from_map(data)} 
     else
       {:error, errors}
     end
   end
-
-  def new(data), do: {:error, required(data, ["buttons", "embed"], "")}
 end

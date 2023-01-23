@@ -1,6 +1,7 @@
 defmodule Elppa.Commands.Settings do
   alias Elppa.Command
   alias Elppa.Settings
+  alias Elppa.SettingsError
 
   alias Nostrum.Api
   alias Nostrum.Struct.Embed
@@ -24,7 +25,6 @@ defmodule Elppa.Commands.Settings do
 
   @impl Command
   def handle_interaction(interaction) do
-    IO.puts("Hello")
     method = :get
     headers = []
     payload = ""
@@ -37,16 +37,13 @@ defmodule Elppa.Commands.Settings do
     {:ok, _status_code, _resp_headers, client_ref} <-
       :hackney.request(method, url, headers, payload, options),
     {:ok, body} <-
-      :hackney.body(client_ref) do
+      :hackney.body(client_ref), 
+    {:ok, serialized_data} <-
+      Toml.decode(body) do
       
-      {:ok, serialized_data} = Toml.decode(body)
       
-      IO.puts("Hello")
       case Settings.new(serialized_data) do
         {:ok, data} ->
-          Elppa.DB.save(data)
-          IO.inspect(data)
-
           Api.create_interaction_response!(interaction, %{
             type: 4,
             data: %{
@@ -57,10 +54,14 @@ defmodule Elppa.Commands.Settings do
             }
           })
         {:error, errors} ->
+          content = errors
+                    |> Enum.map(&SettingsError.to_string/1)
+                    |> Enum.join("\n")
+
           Api.create_interaction_response!(interaction, %{
             type: 4,
             data: %{
-              content: inspect(errors), 
+              content: "```diff\n" <> content <> "\n```", 
             },
           })
       end
@@ -70,7 +71,7 @@ defmodule Elppa.Commands.Settings do
         Api.create_interaction_response(interaction, %{
           type: 4,
           data: %{
-            content: "出錯",
+            content: inspect(err),
           },
         }) 
     end

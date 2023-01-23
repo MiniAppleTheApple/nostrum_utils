@@ -406,4 +406,13 @@ defmodule Elppa.Test.Settings do
     expected = MapSet.new(attributes_not_found(["style", "label"], "buttons.0."))
     assert MapSet.equal?(set, expected)
   end
+
+  test "Missing value and wrong type" do
+    embed = @example["embed"]
+            |> Map.put("title", 0)
+    {:error, msgs} = Settings.new(@example |> Map.delete("buttons") |> Map.put("embed", embed))
+    set = MapSet.new(msgs)
+    expected = MapSet.new([{:attribute_not_found, "buttons"}, {:not_a_string, "embed.title"}])
+    assert MapSet.equal?(set, expected)
+  end
 end
