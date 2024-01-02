@@ -7,8 +7,6 @@ defmodule Elppa.Commands do
   # your command's `spec/1` function, so you can see all of the command names
   # here and ensure they don't collide.
   @commands %{
-    "ping" => Elppa.Commands.Ping,
-    "settings" => Elppa.Commands.Settings,
   }
 
   @command_names for {name, _} <- @commands, do: name

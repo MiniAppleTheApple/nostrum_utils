@@ -16,16 +16,7 @@ defmodule Elppa.Consumer do
   end
 
   def handle_event({:INTERACTION_CREATE, interaction, _ws_state}) do
-    if interaction.type == 3 do
-      Api.create_interaction_response!(interaction, %{
-        type: 4,
-        data: %{
-          content: "<@#{interaction.data.custom_id}>",
-        }
-      })
-    else
-      Commands.handle_interaction(interaction)
-    end
+    Commands.handle_interaction(interaction)
   end
 
   def handle_event(_data) do
