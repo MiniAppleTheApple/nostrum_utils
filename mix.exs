@@ -15,7 +15,7 @@ defmodule NekoPreto.MixProject do
   def application do
     [
       extra_applications: [:logger],
-      mod: {Elppa.Application, []}
+      mod: {Mark.Application, []}
     ]
   end
 
