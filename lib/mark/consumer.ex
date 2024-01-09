@@ -1,10 +1,10 @@
-defmodule Elppa.Consumer do
+defmodule Mark.Consumer do
   @moduledoc false
   use Nostrum.Consumer
 
   alias Nostrum.Api
 
-  alias Elppa.Commands
+  alias Mark.Commands
 
   def start_link do
     Consumer.start_link(__MODULE__)

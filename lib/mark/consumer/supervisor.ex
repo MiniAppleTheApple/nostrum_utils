@@ -1,4 +1,4 @@
-defmodule Elppa.Consumer.Supervisor do
+defmodule Mark.Consumer.Supervisor do
   @moduledoc false
   use Supervisor
 
@@ -8,13 +8,13 @@ defmodule Elppa.Consumer.Supervisor do
 
   @impl true
   def init(_init_arg) do
-    children = [Elppa.Consumer, {Elppa.DB, nil}]
+    children = [Mark.Consumer, {Mark.DB, nil}]
 
     Supervisor.init(children, strategy: :one_for_one)
   end
 end
 
-defmodule Elppa.DB do
+defmodule Mark.DB do
   use Agent
 
   def start_link(initial_value) do

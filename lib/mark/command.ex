@@ -1,4 +1,4 @@
-defmodule Elppa.Command do
+defmodule Mark.Command do
   @moduledoc """
   Behaviour for application command implementations.
   """

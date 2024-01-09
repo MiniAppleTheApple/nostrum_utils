@@ -1,4 +1,4 @@
-defmodule Elppa.Commands do
+defmodule Mark.Commands do
   @doc """
   Handling and routing for commands and interactions.
   """
