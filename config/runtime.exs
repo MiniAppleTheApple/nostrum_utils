@@ -11,5 +11,3 @@ config :nostrum,
 config :elppa,
   env: Config.config_env(),
   dev_guild_id: System.get_env("DEV_GUILD_ID")
-
-

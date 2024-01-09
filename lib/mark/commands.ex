@@ -6,8 +6,7 @@ defmodule Elppa.Commands do
   # Add your commands here. The command name will be passed as an argument to
   # your command's `spec/1` function, so you can see all of the command names
   # here and ensure they don't collide.
-  @commands %{
-  }
+  @commands %{}
 
   @command_names for {name, _} <- @commands, do: name
 

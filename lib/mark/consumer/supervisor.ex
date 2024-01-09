@@ -26,6 +26,6 @@ defmodule Elppa.DB do
   end
 
   def get do
-    Agent.get(__MODULE__, &(&1))
+    Agent.get(__MODULE__, & &1)
   end
 end
