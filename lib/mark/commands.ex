@@ -6,7 +6,10 @@ defmodule Mark.Commands do
   # Add your commands here. The command name will be passed as an argument to
   # your command's `spec/1` function, so you can see all of the command names
   # here and ensure they don't collide.
-  @commands %{}
+  @commands %{
+    "mark" => Mark.Commands.Mark,
+    "ping" => Mark.Commands.Ping,
+  }
 
   @command_names for {name, _} <- @commands, do: name
 
@@ -15,8 +18,8 @@ defmodule Mark.Commands do
 
     # Global application commands take a couple of minutes to update in Discord,
     # so we use a test guild when in dev mode.
-    if Application.get_env(:nostrum_boilerplate, :env) == :dev do
-      guild_id = Application.get_env(:nostrum_boilerplate, :dev_guild_id)
+    if Application.get_env(:mark, :env) == :dev do
+      guild_id = Application.get_env(:mark, :dev_guild_id)
       Nostrum.Api.bulk_overwrite_guild_application_commands(guild_id, commands)
     else
       Nostrum.Api.bulk_overwrite_global_application_commands(commands)

@@ -2,7 +2,6 @@ defmodule Mark.Command do
   @moduledoc """
   Behaviour for application command implementations.
   """
-
   alias Nostrum.Struct.Interaction
 
   @doc """
