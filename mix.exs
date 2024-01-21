@@ -25,7 +25,8 @@ defmodule Mark.MixProject do
       {:dotenv_parser, "~> 2.0"},
       {:nostrum, github: "Kraigie/nostrum"},
       {:hackney, github: "benoitc/hackney", branch: "master"},
-      {:toml, "~> 0.7"}
+      {:toml, "~> 0.7"},
+      {:mongodb, "~> 0.5.1"},
     ]
   end
 end
