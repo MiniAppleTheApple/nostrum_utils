@@ -26,7 +26,8 @@ defmodule Mark.MixProject do
       {:nostrum, github: "Kraigie/nostrum"},
       {:hackney, github: "benoitc/hackney", branch: "master"},
       {:toml, "~> 0.7"},
-      {:mongodb, "~> 0.5.1"},
+      {:mongodb_driver, "~> 1.0.0"},
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
     ]
   end
 end
