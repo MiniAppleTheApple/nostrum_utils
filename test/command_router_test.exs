@@ -36,7 +36,7 @@ defmodule Mark.Test.CommandRouter do
         name: "root",
         description: "description"
       },
-      commands: %{ 
+      commands: %{
         "sub_command_group" => %CommandRouter{
           level: :sub_command_group,
           spec: %{
@@ -69,7 +69,7 @@ defmodule Mark.Test.CommandRouter do
             }
           ],
         }
-      ] 
+      ]
     }
 
     assert CommandRouter.to_spec(struct) == spec
@@ -82,7 +82,7 @@ defmodule Mark.Test.CommandRouter do
         name: "root",
         description: "description"
       },
-      commands: %{ 
+      commands: %{
         "sub_command_group_group" => %CommandRouter{
           level: :sub_command_group,
           spec: %{
@@ -125,12 +125,12 @@ defmodule Mark.Test.CommandRouter do
             }
           ],
         }
-      ] 
+      ]
     }
 
     assert CommandRouter.to_spec(struct) == spec
   end
-  
+
 
   test "Direct to correct command", %{struct: struct} do
     interaction = %Interaction{
@@ -152,9 +152,9 @@ defmodule Mark.Test.CommandRouter do
         ]
       },
     }
-    assert CommandRouter.direct(struct, interaction) == {SubCommand, %ApplicationCommandInteractionData{
+    assert CommandRouter.direct(struct, interaction) == {:ok, {SubCommand, %ApplicationCommandInteractionData{
       name: "sub_command",
       type: ApplicationCommandOptionType.sub_command(),
-    }}
+    }}}
   end
 end

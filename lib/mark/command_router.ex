@@ -1,20 +1,21 @@
 defmodule Mark.CommandRouter do
   alias Nostrum.Struct.Interaction
   alias Nostrum.Struct.ApplicationCommandInteractionData
- 
+  alias Nostrum.Struct.ApplicationCommandInteractionDataOption
+
   alias Mark.Command
   alias Mark.Constant.ApplicationCommandOptionType
 
   @type level :: :root | :sub_command_group
-  @type spec :: map() 
-  @type commands :: commands() 
+  @type spec :: map()
+  @type commands :: commands()
 
   @type t() :: %__MODULE__{
     level: level(),
     spec: spec(),
     commands: commands(),
   }
-  
+
   @enforce_keys [:level, :spec, :commands]
 
   defstruct @enforce_keys
@@ -22,7 +23,7 @@ defmodule Mark.CommandRouter do
   @spec to_spec(Mark.CommandRouter.t()) :: map()
   def to_spec(%__MODULE__{level: :root, spec: spec, commands: commands}) do
     spec
-    |> Map.put(:options, 
+    |> Map.put(:options,
       Enum.map(
         commands,
         fn {key, value} ->
@@ -48,7 +49,7 @@ defmodule Mark.CommandRouter do
       )
     )
   end
-  
+
   def to_spec(%__MODULE__{level: :sub_command_group, spec: spec, commands: commands}) do
     if commands
       |> Enum.any?(fn {_key, value} -> is_map(value) end)
@@ -58,7 +59,7 @@ defmodule Mark.CommandRouter do
       |> Map.put(
         :options,
         commands
-        |> Enum.map(fn {key, value} -> 
+        |> Enum.map(fn {key, value} ->
           to_spec(value)
           |> Map.put(:name, key)
         end)
@@ -71,26 +72,24 @@ defmodule Mark.CommandRouter do
     end
   end
 
-  @spec direct(t(), Interaction.t()) :: {:ok, Command} | {:error, String.t()}
+  @spec direct(t(), Interaction.t()) :: {:ok, {Command, ApplicationCommandInteractionDataOption}} | {:error, String.t()}
   def direct(router, %Interaction{data: data}) do
     direct(router, data)
   end
 
-  @spec direct(t(), ApplicationCommandInteractionData.t()) :: Command
+  @spec direct(t(), ApplicationCommandInteractionData.t() | ApplicationCommandInteractionDataOption.t()) :: {:ok, {Command, ApplicationCommandInteractionDataOption}} | {:error, String.t()}
   def direct(
     %__MODULE__{
-      commands: commands, 
+      commands: commands,
     },
-    %ApplicationCommandInteractionData{
-      options: options,
-    }) do
-    first = List.first(options)
+    data) do
+    first = List.first(data.options)
     command = commands[first.name]
     if is_map(command) do
-      command 
+      command
       |> direct(first)
     else
-      {command, first}
+      {:ok, {command, first}}
     end
   end
 end
