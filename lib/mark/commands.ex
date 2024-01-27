@@ -50,7 +50,7 @@ defmodule Mark.Commands do
   }
 
   def register_commands do
-    commands = for {name, command} <- @commands do 
+    commands = for {name, command} <- @commands do
       if is_map(command) do
         CommandRouter.to_spec(command)
       else
@@ -63,7 +63,7 @@ defmodule Mark.Commands do
     if Application.get_env(:mark, :env) == :dev do
       IO.puts("Dev mode")
       guild_id = Application.get_env(:mark, :dev_guild_id)
-      {:ok, data} = Nostrum.Api.bulk_overwrite_guild_application_commands(guild_id, commands)
+      {:ok, _data} = Nostrum.Api.bulk_overwrite_guild_application_commands(guild_id, commands)
     else
       Nostrum.Api.bulk_overwrite_global_application_commands(commands)
     end
