@@ -2,8 +2,6 @@ defmodule Mark.Consumer do
   @moduledoc false
   use Nostrum.Consumer
 
-  alias Nostrum.Api
-
   alias Mark.Commands
 
   def start_link do
