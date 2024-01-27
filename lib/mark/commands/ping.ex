@@ -1,16 +1,16 @@
 defmodule Mark.Commands.Ping do
-  alias Nostrum.Api 
+  alias Nostrum.Api
 
   alias Mark.Command
-  
+
   @behaviour Command
-  
+
   @impl Command
   def spec(name) do
     %{
       name: name,
       description: "A command to check if the bot is alive",
-    } 
+    }
   end
 
   @impl Command
@@ -20,7 +20,7 @@ defmodule Mark.Commands.Ping do
       data: %{
         content: "Ping!",
       }
-    }) 
+    })
   end
 
 end

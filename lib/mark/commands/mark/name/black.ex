@@ -1,7 +1,9 @@
 defmodule Mark.Commands.Mark.Name.Black do
+  alias Nostrum.Api
+
   alias Mark.SubCommand
   alias Mark.Constant.ApplicationCommandOptionType
-  
+
   @behaviour SubCommand
 
   @impl SubCommand
@@ -22,7 +24,12 @@ defmodule Mark.Commands.Mark.Name.Black do
   end
 
   @impl SubCommand
-  def handle_interaction(_interaction, _option) do
-    
+  def handle_interaction(interaction, _option) do
+    Api.create_interaction_response!(interaction, %{
+      type: 4,
+      data: %{
+        content: "Ping",
+      }
+    })
   end
 end

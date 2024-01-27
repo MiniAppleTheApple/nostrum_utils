@@ -1,4 +1,6 @@
 defmodule Mark.Commands.Mark.Role.DelSet do
+  alias Nostrum.Api
+
   alias Mark.SubCommand
   alias Mark.Constant.ApplicationCommandOptionType
 
@@ -10,11 +12,16 @@ defmodule Mark.Commands.Mark.Role.DelSet do
       name: name,
       description: "移除本來可以使用改名功能的身份組",
       type: ApplicationCommandOptionType.sub_command(),
-    } 
+    }
   end
 
   @impl SubCommand
-  def handle_interaction(_interaction, _option) do
-
+  def handle_interaction(interaction, _option) do
+    Api.create_interaction_response!(interaction, %{
+      type: 4,
+      data: %{
+        content: "Ping",
+      }
+    })
   end
 end
