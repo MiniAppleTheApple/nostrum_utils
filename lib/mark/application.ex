@@ -8,7 +8,8 @@ defmodule Mark.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      {Mark.Consumer.Supervisor, []}
+      {Mark.Consumer.Supervisor, []},
+      Mark.Repo,
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

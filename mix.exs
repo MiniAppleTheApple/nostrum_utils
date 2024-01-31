@@ -14,7 +14,7 @@ defmodule Mark.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger],
+      extra_applications: [:logger, :ecto],
       mod: {Mark.Application, []}
     ]
   end
@@ -26,8 +26,11 @@ defmodule Mark.MixProject do
       {:nostrum, github: "Kraigie/nostrum"},
       {:hackney, github: "benoitc/hackney", branch: "master"},
       {:toml, "~> 0.7"},
-      {:mongodb_driver, "~> 1.0.0"},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
+      # Ecto
+      {:ecto, "~> 3.11"},
+      {:ecto_sql, "~> 3.11"},
+      {:postgrex, "~> 0.17.0"},
     ]
   end
 end
