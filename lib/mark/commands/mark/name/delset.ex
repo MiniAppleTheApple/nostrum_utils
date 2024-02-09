@@ -27,7 +27,7 @@ defmodule Mark.Commands.Mark.Name.DelSet do
     Api.create_interaction_response!(interaction, %{
       type: 4,
       data: %{
-        content: "Ping",
+        content: "Ping"
       }
     })
   end

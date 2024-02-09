@@ -29,7 +29,7 @@ defmodule Mark.MixProject do
       # Ecto
       {:ecto, "~> 3.11"},
       {:ecto_sql, "~> 3.11"},
-      {:postgrex, "~> 0.17.0"},
+      {:postgrex, "~> 0.17.0"}
     ]
   end
 end

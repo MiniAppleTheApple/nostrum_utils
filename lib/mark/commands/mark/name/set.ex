@@ -16,8 +16,8 @@ defmodule Mark.Commands.Mark.Name.Set do
         %{
           name: "type",
           type: ApplicationCommandOptionType.string(),
-          description: "字符格式的類型",
-        },
+          description: "字符格式的類型"
+        }
       ]
     }
   end
@@ -27,7 +27,7 @@ defmodule Mark.Commands.Mark.Name.Set do
     Api.create_interaction_response!(interaction, %{
       type: 4,
       data: %{
-        content: "Ping",
+        content: "Ping"
       }
     })
   end

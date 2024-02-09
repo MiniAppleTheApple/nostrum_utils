@@ -9,7 +9,7 @@ defmodule Mark.Test.CommandRouter.SubCommand do
     %{
       name: name,
       type: ApplicationCommandOptionType.sub_command(),
-      description: "description",
+      description: "description"
     }
   end
 
@@ -40,13 +40,13 @@ defmodule Mark.Test.CommandRouter do
         "sub_command_group" => %CommandRouter{
           level: :sub_command_group,
           spec: %{
-            description: "description",
+            description: "description"
           },
           commands: %{
-            "sub_command" => SubCommand,
+            "sub_command" => SubCommand
           }
-        },
-      },
+        }
+      }
     }
 
     {:ok, %{struct: struct}}
@@ -65,9 +65,9 @@ defmodule Mark.Test.CommandRouter do
             %{
               name: "sub_command",
               description: "description",
-              type: ApplicationCommandOptionType.sub_command(),
+              type: ApplicationCommandOptionType.sub_command()
             }
-          ],
+          ]
         }
       ]
     }
@@ -86,22 +86,23 @@ defmodule Mark.Test.CommandRouter do
         "sub_command_group_group" => %CommandRouter{
           level: :sub_command_group,
           spec: %{
-            description: "description",
+            description: "description"
           },
           commands: %{
             "sub_command_group" => %CommandRouter{
               level: :sub_command_group,
               spec: %{
-                description: "description",
+                description: "description"
               },
               commands: %{
-                "sub_command" => SubCommand,
+                "sub_command" => SubCommand
               }
             }
           }
-        },
-      },
+        }
+      }
     }
+
     spec = %{
       name: "root",
       description: "description",
@@ -119,11 +120,11 @@ defmodule Mark.Test.CommandRouter do
                 %{
                   name: "sub_command",
                   description: "description",
-                  type: ApplicationCommandOptionType.sub_command(),
+                  type: ApplicationCommandOptionType.sub_command()
                 }
               ]
             }
-          ],
+          ]
         }
       ]
     }
@@ -131,11 +132,9 @@ defmodule Mark.Test.CommandRouter do
     assert CommandRouter.to_spec(struct) == spec
   end
 
-
   test "Direct to correct command", %{struct: struct} do
     interaction = %Interaction{
-      data: %ApplicationCommandInteractionData
-{
+      data: %ApplicationCommandInteractionData{
         name: "root",
         options: [
           %ApplicationCommandInteractionData{
@@ -144,17 +143,20 @@ defmodule Mark.Test.CommandRouter do
             options: [
               %ApplicationCommandInteractionData{
                 name: "sub_command",
-                type: ApplicationCommandOptionType.sub_command(),
+                type: ApplicationCommandOptionType.sub_command()
               }
             ]
-
           }
         ]
-      },
+      }
     }
-    assert CommandRouter.direct(struct, interaction) == {:ok, {SubCommand, %ApplicationCommandInteractionData{
-      name: "sub_command",
-      type: ApplicationCommandOptionType.sub_command(),
-    }}}
+
+    assert CommandRouter.direct(struct, interaction) ==
+             {:ok,
+              {SubCommand,
+               %ApplicationCommandInteractionData{
+                 name: "sub_command",
+                 type: ApplicationCommandOptionType.sub_command()
+               }}}
   end
 end

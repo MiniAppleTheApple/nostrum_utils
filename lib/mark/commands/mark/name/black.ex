@@ -12,12 +12,11 @@ defmodule Mark.Commands.Mark.Name.Black do
       name: name,
       description: "將一個名字加入黑名單",
       type: ApplicationCommandOptionType.sub_command(),
-
       options: [
         %{
           name: "name",
           type: ApplicationCommandOptionType.string(),
-          description: "你要加入黑名單的名字",
+          description: "你要加入黑名單的名字"
         }
       ]
     }
@@ -28,7 +27,7 @@ defmodule Mark.Commands.Mark.Name.Black do
     Api.create_interaction_response!(interaction, %{
       type: 4,
       data: %{
-        content: "Ping",
+        content: "Ping"
       }
     })
   end

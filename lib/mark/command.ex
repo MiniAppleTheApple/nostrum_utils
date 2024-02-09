@@ -24,4 +24,3 @@ defmodule Mark.Command do
   def get_option(interaction, name),
     do: Enum.find(interaction.data.options || [], fn %{name: n} -> n == name end)
 end
-

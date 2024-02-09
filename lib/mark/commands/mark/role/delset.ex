@@ -11,7 +11,7 @@ defmodule Mark.Commands.Mark.Role.DelSet do
     %{
       name: name,
       description: "移除本來可以使用改名功能的身份組",
-      type: ApplicationCommandOptionType.sub_command(),
+      type: ApplicationCommandOptionType.sub_command()
     }
   end
 
@@ -20,7 +20,7 @@ defmodule Mark.Commands.Mark.Role.DelSet do
     Api.create_interaction_response!(interaction, %{
       type: 4,
       data: %{
-        content: "Ping",
+        content: "Ping"
       }
     })
   end
