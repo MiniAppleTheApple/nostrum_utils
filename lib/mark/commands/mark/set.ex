@@ -20,7 +20,7 @@ defmodule Mark.Commands.Mark.Set do
     Api.create_interaction_response!(interaction, %{
       type: 4,
       data: %{
-        content: "Ping"
+        components: [],
       }
     })
   end

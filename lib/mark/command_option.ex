@@ -1,7 +1,7 @@
 defmodule Mark.CommandOption do
   alias Nostrum.Struct.ApplicationCommandInteractionDataOption
 
-  alias Mark.Constant.ApplicationCommandOptionType
+  alias Nostrum.Constants.ApplicationCommandOptionType
 
   @spec sub_command_or_sub_command_group?(ApplicationCommandInteractionDataOption.t()) ::
           boolean()

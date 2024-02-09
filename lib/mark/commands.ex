@@ -1,6 +1,7 @@
 defmodule Mark.Commands do
-  alias Mark.Constant.ApplicationCommandOptionType
   alias Mark.CommandRouter
+
+  alias Nostrum.Constants.ApplicationCommandOptionType
 
   @doc """
   Handling and routing for commands and interactions.
@@ -14,7 +15,7 @@ defmodule Mark.Commands do
       level: :root,
       spec: %{
         name: "mark",
-        type: 1,
+        type: ApplicationCommandOptionType.sub_command_group(),
         description: "Root of all the commands"
       },
       commands: %{
@@ -78,7 +79,7 @@ defmodule Mark.Commands do
       :ok
     else
       if is_map(command) do
-        {command_mod, option} = CommandRouter.direct(interaction, command)
+        {:ok, {command_mod, option}} = CommandRouter.direct(interaction, command)
         command_mod.handle_interaction(interaction, option)
       else
         command.handle_interaction(interaction)
