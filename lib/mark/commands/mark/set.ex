@@ -2,8 +2,13 @@ defmodule Mark.Commands.Mark.Set do
   alias Nostrum.Api
 
   alias Nostrum.Constants.ApplicationCommandOptionType
+  alias Nostrum.Constants.InteractionCallbackType
+
+  alias Nostrum.Struct.Component.TextInput
+  alias Nostrum.Struct.Component.ActionRow
 
   alias Mark.SubCommand
+  alias Mark.MessageComponent
 
   @behaviour SubCommand
 
@@ -19,9 +24,11 @@ defmodule Mark.Commands.Mark.Set do
   @impl SubCommand
   def handle_interaction(interaction, _option) do
     Api.create_interaction_response!(interaction, %{
-      type: 4,
+      type: InteractionCallbackType.modal(),
       data: %{
-        components: [],
+        title: "Form",
+        custom_id: MessageComponent.random_id(),
+        components: [ActionRow.action_row(components: [TextInput.text_input("Label", MessageComponent.random_id())])]
       }
     })
   end

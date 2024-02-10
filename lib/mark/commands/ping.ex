@@ -7,7 +7,7 @@ defmodule Mark.Commands.Ping do
   alias Nostrum.Struct.Component
   alias Nostrum.Struct.Component.ActionRow
 
-  alias Nostrum.Constants.InteractionType
+  alias Nostrum.Constants.InteractionCallbackType
 
   alias Nostrum.Cache.Me
 
@@ -27,7 +27,7 @@ defmodule Mark.Commands.Ping do
       data: Component.Button.interaction_button("This button will be deleted after clicked", MessageComponent.random_id()),
       handle: fn new_interaction ->
         Api.create_interaction_response!(new_interaction, %{
-          type: InteractionType.application_command_autocomplete(),
+          type: InteractionCallbackType.channel_message_with_source(),
           data: %{
             content: "Ping by clicking the button"
           }
@@ -40,7 +40,7 @@ defmodule Mark.Commands.Ping do
     MessageComponent.Agent.add_component(button)
 
     Api.create_interaction_response!(interaction, %{
-      type: InteractionType.application_command_autocomplete(),
+      type: InteractionCallbackType.channel_message_with_source(),
       data: %{
         contents: "Ping by slash command",
         components: [

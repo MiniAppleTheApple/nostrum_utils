@@ -1,7 +1,6 @@
 defmodule Mark.Commands do
   alias Mark.CommandRouter
 
-  alias Nostrum.Struct.Interaction
   alias Nostrum.Constants.ApplicationCommandOptionType
   alias Nostrum.Constants.ApplicationCommandType
 
