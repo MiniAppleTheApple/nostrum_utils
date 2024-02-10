@@ -13,11 +13,12 @@ defmodule Mark.MessageComponent.Agent do
     Agent.get(__MODULE__, & &1)
   end
 
+  @spec add_listener(any(), any()) :: :ok
   def add_listener(id, listener) do
     Agent.update(__MODULE__, &Map.put(&1, id, listener))
   end
 
-  @spec add_component(MessageComponent.t()) :: nil
+  @spec add_component(MessageComponent.t()) :: :ok
   def add_component(%MessageComponent{data: data, handle: handle}) do
     add_listener(data.custom_id, handle)
   end

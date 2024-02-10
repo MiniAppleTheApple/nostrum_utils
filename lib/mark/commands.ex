@@ -1,6 +1,7 @@
 defmodule Mark.Commands do
   alias Mark.CommandRouter
 
+  alias Nostrum.Struct.Interaction
   alias Nostrum.Constants.ApplicationCommandOptionType
 
   @doc """
@@ -78,8 +79,8 @@ defmodule Mark.Commands do
     if command == nil do
       :ok
     else
-      if is_map(command) do
-        {:ok, {command_mod, option}} = CommandRouter.direct(interaction, command)
+      if match?(%Interaction{}, interaction) do
+        {:ok, {command_mod, option}} = CommandRouter.direct(@commands[command], interaction)
         command_mod.handle_interaction(interaction, option)
       else
         command.handle_interaction(interaction)

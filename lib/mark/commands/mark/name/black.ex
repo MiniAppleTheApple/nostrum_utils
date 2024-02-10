@@ -1,8 +1,8 @@
 defmodule Mark.Commands.Mark.Name.Black do
   alias Nostrum.Api
+  alias Nostrum.Constants.ApplicationCommandOptionType
 
   alias Mark.SubCommand
-  alias Mark.Constant.ApplicationCommandOptionType
 
   @behaviour SubCommand
 

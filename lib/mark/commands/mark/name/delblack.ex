@@ -1,8 +1,9 @@
 defmodule Mark.Commands.Mark.Name.DelBlack do
   alias Nostrum.Api
 
+  alias Nostrum.Constants.ApplicationCommandOptionType
+
   alias Mark.SubCommand
-  alias Mark.Constant.ApplicationCommandOptionType
 
   @behaviour SubCommand
 

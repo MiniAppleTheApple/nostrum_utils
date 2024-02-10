@@ -1,8 +1,9 @@
 defmodule Mark.Commands.Mark.Role.DelSet do
   alias Nostrum.Api
 
+  alias Nostrum.Constants.ApplicationCommandOptionType
+
   alias Mark.SubCommand
-  alias Mark.Constant.ApplicationCommandOptionType
 
   @behaviour SubCommand
 
