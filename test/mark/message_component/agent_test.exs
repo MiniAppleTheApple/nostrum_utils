@@ -21,30 +21,6 @@ defmodule Mark.Test.MessageComponent.AgentTest do
       %{
         button: button,
         self_destroy_button: button |> Map.put(:handle, fn interaction -> :remove end),
-        select_menu:
-          MessageComponent.new(
-            data: %{
-              placeholder: "Menu",
-              min_values: 1,
-              max_values: 1,
-              options: [
-                %{
-                  label: "first",
-                  value: "first",
-                  description: "description"
-                },
-                %{
-                  label: "second",
-                  value: "second",
-                  description: "description"
-                }
-              ]
-            },
-            handle: fn interaction ->
-              :ok
-            end
-          ),
-        modal: MessageComponent.new(data: %{}, handle: fn interaction -> :ok end),
         interaction: nil
       }
     }
