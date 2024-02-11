@@ -15,6 +15,15 @@ defmodule Mark.Commands.Mark.Set do
   alias Mark.SubCommand
   alias Mark.MessageComponent
   alias Mark.Util
+  alias Mark.Repo
+
+  alias Mark.Schema.Server
+
+  alias Ecto
+
+  import Ecto.Query, only: [from: 2]
+
+  import Bitwise
 
   @timezone 8
 
@@ -37,58 +46,71 @@ defmodule Mark.Commands.Mark.Set do
   @impl SubCommand
   def handle_interaction(interaction, _option) do
     id = MessageComponent.random_id()
-    MessageComponent.Agent.add_listener(id, fn interaction ->
-      [title, description, image_link] = interaction
-      |> Util.get_textinputs_from_interaction()
-      |> Enum.map(&(&1.value))
 
-      current = get_time()
+    case Repo.all(from s in Server, where: s.ref == ^(interaction.guild_id |> to_string())) do
+      [] ->
+        MessageComponent.Agent.add_listener(id, fn interaction ->
+          {:ok, server} = Repo.insert(%Server{ref: interaction.guild_id |> to_string()})
+          role = Ecto.build_assoc(server, :needed_roles)
+          Repo.insert(role)
 
-      emoji = %Emoji{name: "🤔"}
+          [title, description, image_link] = interaction
+          |> Util.get_textinputs_from_interaction()
+          |> Enum.map(&(&1.value))
 
-      embed = %Embed{}
-      |> Embed.put_title(title)
-      |> Embed.put_description(description)
-      |> Embed.put_image(image_link)
-      |> Embed.put_color(0x577CFF)
-      |> Embed.put_footer("ZeiFrei × Mark bot ∣ 社群暱稱系統 • #{format_time(current)}", "https://avatars.githubusercontent.com/u/108135079?s=200&v=4")
+          current = get_time()
 
-      button = Button.interaction_button("進行修改", MessageComponent.random_id(), emoji: emoji)
+          emoji = %Emoji{name: "🤔"}
 
-      MessageComponent.Agent.add_listener(button.custom_id, fn _interaction ->
+          embed = %Embed{}
+          |> Embed.put_title(title)
+          |> Embed.put_description(description)
+          |> Embed.put_image(image_link)
+          |> Embed.put_color(0x577CFF)
+          |> Embed.put_footer("ZeiFrei × Mark bot ∣ 社群暱稱系統 • #{format_time(current)}", "https://avatars.githubusercontent.com/u/108135079?s=200&v=4")
 
-      end)
+          button = Button.interaction_button("進行修改", MessageComponent.random_id(), emoji: emoji)
+
+          Api.create_interaction_response!(interaction, %{
+            type: InteractionCallbackType.channel_message_with_source(),
+            data: %{
+              embeds: [embed],
+              components: [
+                ActionRow.action_row()
+                |> ActionRow.append(button)
+              ]
+            }
+          })
+          :ok
+        end)
 
       Api.create_interaction_response!(interaction, %{
-        type: InteractionCallbackType.channel_message_with_source(),
+        type: InteractionCallbackType.modal(),
         data: %{
-          embeds: [embed],
+          title: "常駐暱稱修改嵌入訊息設定",
+          custom_id: id,
           components: [
-            ActionRow.action_row()
-            |> ActionRow.append(button)
+            ActionRow.action_row(
+              TextInput.text_input("訊息標題", MessageComponent.random_id(), required: true, min_length: 1, max_length: 4000)
+            ),
+            ActionRow.action_row(
+              TextInput.text_input("訊息說明", MessageComponent.random_id(), required: true, min_length: 1, max_length: 4000, style: TextInputStyle.paragraph())
+            ),
+            ActionRow.action_row(
+              TextInput.text_input("慾插入的圖片", MessageComponent.random_id())
+            )
           ]
         }
       })
-      :ok
-    end)
-
-    Api.create_interaction_response!(interaction, %{
-      type: InteractionCallbackType.modal(),
-      data: %{
-        title: "常駐暱稱修改嵌入訊息設定",
-        custom_id: id,
-        components: [
-          ActionRow.action_row(
-            TextInput.text_input("訊息標題", MessageComponent.random_id(), required: true, min_length: 1, max_length: 4000)
-          ),
-          ActionRow.action_row(
-            TextInput.text_input("訊息說明", MessageComponent.random_id(), required: true, min_length: 1, max_length: 4000, style: TextInputStyle.paragraph())
-          ),
-          ActionRow.action_row(
-            TextInput.text_input("慾插入的圖片", MessageComponent.random_id())
-          )
-        ]
-      }
-    })
+      _ ->
+        Api.create_interaction_response!(interaction, %{
+          type: 4,
+          data: %{
+            flags: 1 <<< 6, #ephemeral
+            content: "你的伺服器已經存在一個界面了",
+            components: []
+          },
+        })
+    end
   end
 end
