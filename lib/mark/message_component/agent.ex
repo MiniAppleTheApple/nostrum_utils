@@ -36,7 +36,7 @@ defmodule Mark.MessageComponent.Agent do
     end)
   end
 
-  def remove_component(id) do
+  def remove_listener(id) do
     Agent.update(__MODULE__, fn x ->
       x
       |> Map.delete(id)

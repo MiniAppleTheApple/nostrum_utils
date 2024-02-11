@@ -15,12 +15,4 @@ defmodule Mark.Command do
   Called when the command is invoked.
   """
   @callback handle_interaction(Interaction.t()) :: any()
-  @doc """
-  Gets an option by it's name from the interaction. Returns `nil` if the
-  option is not present in the interaction.
-  """
-  @spec get_option(Interaction.t(), String.t()) ::
-          Nostrum.Struct.ApplicationCommandInteractionData.options() | nil
-  def get_option(interaction, name),
-    do: Enum.find(interaction.data.options || [], fn %{name: n} -> n == name end)
 end

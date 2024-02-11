@@ -43,7 +43,7 @@ defmodule Mark.Test.MessageComponent.AgentTest do
     id = button.data.custom_id
     Agent.start_link(%{})
     Agent.add_component(button)
-    Agent.remove_component(id)
+    Agent.remove_listener(id)
     assert Agent.trigger(id, interaction) == :error
   end
 

@@ -3,6 +3,9 @@ defmodule Mark.Consumer do
   use Nostrum.Consumer
 
   require Logger
+
+  alias Nostrum.Constants.InteractionType
+
   alias Mark.MessageComponent
 
   alias Mark.Commands
@@ -17,11 +20,16 @@ defmodule Mark.Consumer do
   end
 
   def handle_event({:INTERACTION_CREATE, interaction, _ws_state}) do
+
+    application_command = InteractionType.application_command()
+    message_component = InteractionType.message_component()
+    modal_submit = InteractionType.modal_submit()
+
     case interaction.type do
-      2 ->
+      ^application_command ->
         Commands.handle_interaction(interaction)
 
-      3 ->
+      ^message_component ->
         custom_id =
           interaction.message.components
           |> List.first()
@@ -31,9 +39,20 @@ defmodule Mark.Consumer do
 
         case MessageComponent.Agent.trigger(custom_id, interaction) do
           :error -> Logger.error("Error in message component handling")
-          :remove -> MessageComponent.Agent.remove_component(custom_id)
+          :remove -> MessageComponent.Agent.remove_listener(custom_id)
           _ -> nil
         end
+
+       ^modal_submit ->
+        IO.inspect(interaction)
+        custom_id = interaction.data.custom_id
+
+        case MessageComponent.Agent.trigger(custom_id, interaction) do
+          :error -> Logger.error("Error in message component handling")
+          _ -> nil
+        end
+
+        MessageComponent.Agent.remove_listener(custom_id)
     end
   end
 
