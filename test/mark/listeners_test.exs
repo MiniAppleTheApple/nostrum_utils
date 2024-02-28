@@ -20,10 +20,10 @@ defmodule Mark.Test.ListenersTest do
     }
   end
 
-  test "Add button listener to the agent", %{button: button, interaction: interaction} do
-    id = button.data.custom_id
+  test "Add button listener to the agent", %{button: button, interaction: interaction, handle: handle} do
+    id = button.custom_id
     Listeners.start_link(%{})
-    Listeners.add_listener(id, button.handle)
+    Listeners.add_listener(id, handle)
     assert Listeners.trigger(id, interaction) == {:ok, []}
   end
 
@@ -32,23 +32,24 @@ defmodule Mark.Test.ListenersTest do
     assert Listeners.trigger("id", interaction) == :error
   end
 
-  test "Remove listener", %{button: button, interaction: interaction} do
+  test "Remove listener", %{button: button, interaction: interaction, handle: handle} do
     Listeners.start_link(%{})
-    id = button.data.custom_id
+    id = button.custom_id
     Listeners.start_link(%{})
-    Listeners.add_listener(id, button.handle)
+    Listeners.add_listener(id, handle)
     Listeners.remove_listener(id)
     assert Listeners.trigger(id, interaction) == :error
   end
 
   test "Listener can be triggered unlimited by default", %{
     button: button,
-    interaction: interaction
+    interaction: interaction,
+    handle: handle,
   } do
     Listeners.start_link(%{})
-    id = button.data.custom_id
+    id = button.custom_id
     Listeners.start_link(%{})
-    Listeners.add_listener(id, button.handle)
+    Listeners.add_listener(id, handle)
     assert Listeners.trigger(id, interaction) == {:ok, []}
     assert Listeners.trigger(id, interaction) == {:ok, []}
   end

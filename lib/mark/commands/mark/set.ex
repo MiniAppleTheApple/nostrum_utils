@@ -83,7 +83,12 @@ defmodule Mark.Commands.Mark.Set do
           })
           :ok
         end)
-
+      # Api.create_interaction_response!(interaction, %{
+      #   type: InteractionCallbackType.channel_message_with_source(),
+      #   data: %{
+      #     content: "正在爲您創建界面",
+      #   },
+      # })
       Api.create_interaction_response!(interaction, %{
         type: InteractionCallbackType.modal(),
         data: %{
@@ -102,7 +107,8 @@ defmodule Mark.Commands.Mark.Set do
           ]
         }
       })
-      _ ->
+      servers ->
+        IO.inspect(servers)
         Api.create_interaction_response!(interaction, %{
           type: 4,
           data: %{

@@ -1,6 +1,7 @@
 defmodule Mark.Test.CommandRouter.SubCommand do
   alias Mark.SubCommand
-  alias Mark.Constant.ApplicationCommandOptionType
+  
+  alias Nostrum.Constants.ApplicationCommandOptionType
 
   @behaviour SubCommand
 
@@ -20,10 +21,11 @@ defmodule Mark.Test.CommandRouter.SubCommand do
 end
 
 defmodule Mark.Test.CommandRouter do
+  alias Nostrum.Constants.ApplicationCommandOptionType
+
   alias Nostrum.Struct.Interaction
   alias Nostrum.Struct.ApplicationCommandInteractionData
 
-  alias Mark.Constant.ApplicationCommandOptionType
   alias Mark.CommandRouter
   alias Mark.Test.CommandRouter.SubCommand
 
