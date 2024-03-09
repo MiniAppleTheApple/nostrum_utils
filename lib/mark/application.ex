@@ -10,7 +10,7 @@ defmodule Mark.Application do
     children = [
       {Mark.Consumer.Supervisor, []},
       Mark.Repo,
-      {Mark.MessageComponent.Agent, %{}}
+      {Mark.Listeners, %{}}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

@@ -6,7 +6,7 @@ defmodule Mark.Consumer do
 
   alias Nostrum.Constants.InteractionType
 
-  alias Mark.MessageComponent
+  alias Mark.Listeners
 
   alias Mark.Commands
 
@@ -17,6 +17,19 @@ defmodule Mark.Consumer do
   def handle_event({:READY, _data, _ws_state}) do
     IO.puts("On ready")
     Commands.register_commands()
+  end
+
+  defp handle_trigger_result(result, custom_id) do
+    case result do
+      :error -> Logger.error("Error in message component handling")
+      :remove -> Listeners.remove_listener(custom_id)
+      {:add_listener, listeners} ->
+        listeners
+        |> Enum.each(fn {id, handler} ->
+            Listeners.add_listener(id, handler)
+          end)
+      _ -> nil
+    end
   end
 
   def handle_event({:INTERACTION_CREATE, interaction, _ws_state}) do
@@ -36,23 +49,16 @@ defmodule Mark.Consumer do
           |> Map.get(:components)
           |> List.first()
           |> Map.get(:custom_id)
-
-        case MessageComponent.Agent.trigger(custom_id, interaction) do
-          :error -> Logger.error("Error in message component handling")
-          :remove -> MessageComponent.Agent.remove_listener(custom_id)
-          _ -> nil
-        end
-
-       ^modal_submit ->
+        
+        Listeners.trigger(custom_id, interaction)
+        |> handle_trigger_result(custom_id)
+        
+      ^modal_submit ->
         IO.inspect(interaction)
         custom_id = interaction.data.custom_id
 
-        case MessageComponent.Agent.trigger(custom_id, interaction) do
-          :error -> Logger.error("Error in message component handling")
-          _ -> nil
-        end
-
-        MessageComponent.Agent.remove_listener(custom_id)
+        Listeners.trigger(custom_id, interaction)
+        |> handle_trigger_result(custom_id)   
     end
   end
 

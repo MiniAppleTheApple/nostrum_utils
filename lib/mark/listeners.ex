@@ -1,6 +1,11 @@
 defmodule Mark.Listeners do
   use Agent
 
+  alias Nostrum.Struct.Interaction
+
+  @type trigger_result() :: :ok | :error | :remove | {:add_listener, [{String.t(), handler()}]}
+  @type handler() :: (Interation.t() -> trigger_result())
+
   @spec start_link(map()) :: Agent.on_start()
   def start_link(initial_value) do
     IO.inspect(initial_value)
@@ -11,12 +16,12 @@ defmodule Mark.Listeners do
     Agent.get(__MODULE__, & &1)
   end
 
-  @spec add_listener(any(), any()) :: :ok
+  @spec add_listener(Strin.t(), handler()) :: :ok
   def add_listener(id, listener) do
     Agent.update(__MODULE__, &Map.put(&1, id, listener))
   end
 
-  @spec trigger(String.t(), Interaction.t()) :: :ok | :error | :remove
+  @spec trigger(String.t(), Interaction.t()) :: trigger_result()
   def trigger(id, interaction) do
     Agent.get(__MODULE__, fn x ->
       listener = Map.get(x, id)
