@@ -8,7 +8,6 @@ defmodule Mark.Listeners do
 
   @spec start_link(map()) :: Agent.on_start()
   def start_link(initial_value) do
-    IO.inspect(initial_value)
     Agent.start_link(fn -> initial_value end, name: __MODULE__)
   end
 

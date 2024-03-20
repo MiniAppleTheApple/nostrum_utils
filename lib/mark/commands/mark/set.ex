@@ -52,8 +52,6 @@ defmodule Mark.Commands.Mark.Set do
         Listeners.add_listener(id, fn interaction ->
           # 將伺服器的資料放進資料庫
           {:ok, server} = Repo.insert(%Server{ref: interaction.guild_id |> to_string()})
-          role = Ecto.build_assoc(server, :needed_roles)
-          Repo.insert(role)
 
           # 取得用戶輸入
           [title, description, image_link] = interaction
@@ -75,12 +73,62 @@ defmodule Mark.Commands.Mark.Set do
           button = Button.interaction_button("進行修改", button_id, emoji: emoji)
 
           button_handle = fn interaction ->
-            Api.create_interaction_response!(interaction, %{
-              type: InteractionCallbackType.channel_message_with_source(),
-              data: %{
-                content: "目前還未實現這個功能", 
-              },
-            })
+            query = from s in Server,
+              where: s.ref == ^(interaction.guild_id |> Integer.to_string()),
+              preload: [:needed_roles],
+              select: s
+
+            [%Server{needed_roles: needed_roles}] = Repo.all(query)
+
+            needed_roles_id = needed_roles
+            |> Enum.map(&(&1.ref))
+            |> MapSet.new()
+
+            roles_id = interaction.member.roles
+            |> Enum.map(&Integer.to_string(&1))
+            |> MapSet.new()
+
+            if MapSet.subset?(needed_roles_id, roles_id) do
+              modal_handle = fn interaction -> 
+                [name] = interaction
+                |> Util.get_textinputs_from_interaction()
+                |> Enum.map(&(&1.value))
+
+                Api.modify_guild_member!(interaction.guild_id, interaction.member.user_id, nick: name)
+                
+                Api.create_interaction_response(interaction, %{
+                  type: InteractionCallbackType.channel_message_with_source(),
+                  data: %{
+                    flag: 1 <<< 6, # empheral
+                    content: "你已經成功將名字修改成#{name}",
+                  },
+                })
+                :ok
+              end
+
+              id = Util.random_id()
+
+              Api.create_interaction_response!(interaction, %{
+                type: InteractionCallbackType.modal(),
+                data: %{
+                  title: "修改暱稱",
+                  custom_id: id,
+                  components: [
+                    ActionRow.action_row(
+                      TextInput.text_input("你想要修改成的名字", Util.random_id(), required: true, min_length: 1, max_length: 4000))
+                  ],
+                },
+              })
+              {:add_listener, [{id, modal_handle}]}
+            else
+              Api.create_interaction_response(interaction, %{
+                type: InteractionCallbackType.channel_message_with_source(),
+                data: %{
+                  content: "你不能使用此功能",
+                },
+              })
+              :ok
+            end
           end
 
           Api.create_interaction_response!(interaction, %{
@@ -96,7 +144,8 @@ defmodule Mark.Commands.Mark.Set do
 
           {:add_listener, [{button_id, button_handle}]} 
         end)
-        Api.create_interaction_response!(interaction, %{type: InteractionCallbackType.modal(),
+        Api.create_interaction_response!(interaction, %{
+          type: InteractionCallbackType.modal(),
           data: %{
            title: "常駐暱稱修改嵌入訊息設定",
            custom_id: id,
@@ -116,7 +165,7 @@ defmodule Mark.Commands.Mark.Set do
         Api.create_interaction_response!(interaction, %{
           type: InteractionCallbackType.channel_message_with_source(),
           data: %{
-            content: "正在幫你創建界面",
+            content: "正在幫你創建介面",
           },
         })
       servers ->
@@ -125,7 +174,7 @@ defmodule Mark.Commands.Mark.Set do
           type: 4,
           data: %{
             flags: 1 <<< 6, # ephemeral
-            content: "你的伺服器已經存在一個界面了",
+            content: "你的伺服器已經存在一個介面了",
             components: []
           },
         })

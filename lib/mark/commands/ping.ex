@@ -11,6 +11,7 @@ defmodule Mark.Commands.Ping do
   alias Nostrum.Cache.Me
 
   @behaviour Command
+  # Hello
 
   @impl Command
   def spec(name) do

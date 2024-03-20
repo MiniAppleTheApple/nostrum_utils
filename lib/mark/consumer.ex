@@ -54,7 +54,6 @@ defmodule Mark.Consumer do
         |> handle_trigger_result(custom_id)
         
       ^modal_submit ->
-        IO.inspect(interaction)
         custom_id = interaction.data.custom_id
 
         Listeners.trigger(custom_id, interaction)
