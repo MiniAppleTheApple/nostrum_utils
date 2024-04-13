@@ -11,11 +11,12 @@ defmodule Mark.CommandOption do
   end
 
   @spec get_option(ApplicationCommandInteractionDataOption.t(), String.t()) ::
-          ApplicationCommandInteractionDataOption.t()
+          any()
   def get_option(option_root, name) do
     option_root.options
     |> Enum.find(fn %{name: n} ->
       name == n
     end)
+    |> Map.get(:value)
   end
 end
