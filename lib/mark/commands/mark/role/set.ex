@@ -49,7 +49,7 @@ defmodule Mark.Commands.Mark.Role.Set do
         Api.create_interaction_response!(interaction, %{
           type: InteractionCallbackType.channel_message_with_source(),
           data: %{
-            flag: 1 <<< 6, #empheral
+            flags: 1 <<< 6, #empheral
             content: "此伺服器未被設定，請使用`/mark set`來設定",
           },
         })
@@ -77,7 +77,7 @@ defmodule Mark.Commands.Mark.Role.Set do
             Api.create_interaction_response!(interaction, %{
               type: InteractionCallbackType.channel_message_with_source(),
               data: %{
-                flag: 1 <<< 6, #empheral
+                flags: 1 <<< 6, #empheral
                 content: "確定進行此操作",
                 components: [ActionRow.action_row() |> ActionRow.append(confirm_btn) |> ActionRow.append(cancel_btn)]
               },
@@ -94,7 +94,7 @@ defmodule Mark.Commands.Mark.Role.Set do
               Api.create_interaction_response!(interaction, %{
                 type: InteractionCallbackType.channel_message_with_source(),
                 data: %{
-                  flag: 1 <<< 6, # empheral,
+                  flags: 1 <<< 6, # empheral,
                   content: "已將#{roles |> Enum.join("，")}身份組新增進可以使用改名指令的名單",
                 }
               })
@@ -117,7 +117,7 @@ defmodule Mark.Commands.Mark.Role.Set do
             Api.create_interaction_response!(interaction, %{
               type: InteractionCallbackType.channel_message_with_source(),
               data: %{
-                flag: 1 <<< 6, #empheral
+                flags: 1 <<< 6, #empheral
                 content: "#{repeated}#{do_not_exist}",
               },
             })
