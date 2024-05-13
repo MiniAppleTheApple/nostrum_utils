@@ -42,16 +42,17 @@ defmodule Mark.Commands.Mark.Set do
   defp format_time(time), do: "#{time.year}/#{time.month}/#{time.day} #{time.hour}:#{time.minute}"
 
   @impl SubCommand
-  def handle_interaction(interaction, _option) do
+  def handle_interaction(command_interaction, _option) do
     id = Util.random_id()
     
     # 從資料庫查看有沒有另外一個在此伺服器的界面
-    case Repo.all(from s in Server, where: s.ref == ^(interaction.guild_id |> to_string())) do
+    case Repo.all(from s in Server, where: s.ref == ^(command_interaction.guild_id |> to_string())) do
       [] ->
         # Event binding 
         Listeners.add_listener(id, fn interaction ->
           # 將伺服器的資料放進資料庫
-          {:ok, server} = Repo.insert(%Server{ref: interaction.guild_id |> to_string()})
+          name = Api.get_guild!(interaction.guild_id).name
+          {:ok, server} = Repo.insert(%Server{ref: interaction.guild_id |> to_string(), name: name})
 
           # 取得用戶輸入
           [title, description, image_link] = interaction
@@ -94,15 +95,26 @@ defmodule Mark.Commands.Mark.Set do
                 |> Util.get_textinputs_from_interaction()
                 |> Enum.map(&(&1.value))
 
-                Api.modify_guild_member!(interaction.guild_id, interaction.member.user_id, nick: name)
+                case Api.modify_guild_member(interaction.guild_id, interaction.member.user_id, nick: name) do
+                  {:ok, _member} ->
+                    Api.create_interaction_response!(interaction, %{
+                      type: InteractionCallbackType.channel_message_with_source(),
+                      data: %{
+                        flag: 1 <<< 6, # empheral
+                        content: "你已經成功將名字修改成#{name}",
+                      },
+                    })    
+                  {:error, _msg} ->
+                    Api.create_interaction_response!(interaction, %{
+                      type: InteractionCallbackType.channel_message_with_source(),
+                      data: %{
+                        flag: 1 <<< 6, # empheral
+                        content: "無法修改你的名字，也許是此機器人的權限不足",
+                      },
+                    })
+                end
                 
-                Api.create_interaction_response(interaction, %{
-                  type: InteractionCallbackType.channel_message_with_source(),
-                  data: %{
-                    flag: 1 <<< 6, # empheral
-                    content: "你已經成功將名字修改成#{name}",
-                  },
-                })
+                
                 :ok
               end
 
@@ -144,7 +156,7 @@ defmodule Mark.Commands.Mark.Set do
 
           {:add_listener, [{button_id, button_handle}]} 
         end)
-        Api.create_interaction_response!(interaction, %{
+        Api.create_interaction_response!(command_interaction, %{
           type: InteractionCallbackType.modal(),
           data: %{
            title: "常駐暱稱修改嵌入訊息設定",
@@ -162,15 +174,9 @@ defmodule Mark.Commands.Mark.Set do
            ]
           }
         })
-        Api.create_interaction_response!(interaction, %{
-          type: InteractionCallbackType.channel_message_with_source(),
-          data: %{
-            content: "正在幫你創建介面",
-          },
-        })
       servers ->
         IO.inspect(servers)
-        Api.create_interaction_response!(interaction, %{
+        Api.create_interaction_response!(command_interaction, %{
           type: 4,
           data: %{
             flags: 1 <<< 6, # ephemeral
