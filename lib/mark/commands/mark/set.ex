@@ -52,7 +52,7 @@ defmodule Mark.Commands.Mark.Set do
         Listeners.add_listener(id, fn interaction ->
           # 將伺服器的資料放進資料庫
           name = Api.get_guild!(interaction.guild_id).name
-          {:ok, server} = Repo.insert(%Server{ref: interaction.guild_id |> to_string(), name: name})
+          {:ok, _server} = Repo.insert(%Server{ref: interaction.guild_id |> to_string(), name: name})
 
           # 取得用戶輸入
           [title, description, image_link] = interaction
