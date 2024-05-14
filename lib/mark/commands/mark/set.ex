@@ -81,15 +81,15 @@ defmodule Mark.Commands.Mark.Set do
 
             %Server{needed_roles: needed_roles} = Repo.one(query)
 
-            needed_roles_id = needed_roles
+            needed_role_ids = needed_roles
             |> Enum.map(&(&1.ref))
             |> MapSet.new()
 
-            roles_id = interaction.member.roles
+            role_ids = interaction.member.roles
             |> Enum.map(&Integer.to_string(&1))
             |> MapSet.new()
 
-            if MapSet.subset?(needed_roles_id, roles_id) do
+            if MapSet.subset?(needed_role_ids, role_ids) do
               modal_handle = fn interaction -> 
                 [name] = interaction
                 |> Util.get_textinputs_from_interaction()
@@ -175,7 +175,7 @@ defmodule Mark.Commands.Mark.Set do
            ]
           }
         })
-      server ->
+      _server ->
         Api.create_interaction_response!(command_interaction, %{
           type: 4,
           data: %{

@@ -52,6 +52,12 @@ defmodule Mark.Commands.Mark.Role.Set do
     end)
     |> Enum.into(%{})
 
+    name_by_id = id_by_name
+    |> Enum.map(fn {name, id} ->
+      {id, name}
+    end)
+    |> Enum.into(%{})
+
     roles = option
     |> CommandOption.get_option("roles")
     |> String.split(",")
@@ -68,9 +74,9 @@ defmodule Mark.Commands.Mark.Role.Set do
           },
         })
       %{needed_roles: needed_roles} ->
-        roles_id = roles
+        role_ids = roles
         |> Enum.map(fn role_name ->
-          id_by_name[role_name]
+          name_by_id[role_name]
         end)
 
         needed_role_ids = needed_roles
@@ -78,7 +84,7 @@ defmodule Mark.Commands.Mark.Role.Set do
           ref
         end)
         
-        case {intersection(roles_id, needed_role_ids), roles |> Enum.filter(fn x -> id_by_name[x] == nil end)} do
+        case {intersection(role_ids, needed_role_ids) |> Enum.map(fn x -> name_by_id[x] end), roles |> Enum.filter(fn x -> id_by_name[x] == nil end)} do
           {[], []} -> 
             confirm_id = Util.random_id()
             confirm_btn = Button.interaction_button("確定", confirm_id)
@@ -95,7 +101,7 @@ defmodule Mark.Commands.Mark.Role.Set do
             Listeners.add_listener(confirm_id, fn interaction ->
               guild_id = interaction.guild_id |> Integer.to_string()
               server = Repo.one!(from s in Server, where: s.ref == ^guild_id, select: s)
-              roles_id 
+              role_ids 
               |> Enum.each(fn role ->
                 server                
                 |> Ecto.build_assoc(:needed_roles, %{ref: role |> to_string()})
