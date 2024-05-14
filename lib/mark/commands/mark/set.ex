@@ -100,7 +100,7 @@ defmodule Mark.Commands.Mark.Set do
                     Api.create_interaction_response!(interaction, %{
                       type: InteractionCallbackType.channel_message_with_source(),
                       data: %{
-                        flag: 1 <<< 6, # empheral
+                        flags: 1 <<< 6, # empheral
                         content: "你已經成功將名字修改成#{name}",
                       },
                     })    
@@ -108,7 +108,7 @@ defmodule Mark.Commands.Mark.Set do
                     Api.create_interaction_response!(interaction, %{
                       type: InteractionCallbackType.channel_message_with_source(),
                       data: %{
-                        flag: 1 <<< 6, # empheral
+                        flags: 1 <<< 6, # empheral
                         content: "無法修改你的名字，也許是此機器人的權限不足",
                       },
                     })
