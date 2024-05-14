@@ -1,4 +1,5 @@
 defmodule Mark.Commands.Mark.Role.Set do
+  alias Ecto.Queryable
   alias Nostrum.Struct.Component.{Button, ActionRow}
   alias Nostrum.Constants.{InteractionCallbackType, ApplicationCommandOptionType}
   alias Nostrum.Api
@@ -29,9 +30,22 @@ defmodule Mark.Commands.Mark.Role.Set do
     }
   end
 
+  @spec query_corresponding_server(String.t()) :: Queryable.t()
+  defp query_corresponding_server(guild_id) do
+    from s in Server, where: s.ref == ^(guild_id |> to_string()), preload: [:needed_roles], select: s
+  end
+
+  @spec intersection(list(), list()) :: list()
+  defp intersection(set, other) do
+    set
+    |> MapSet.new()
+    |> MapSet.intersection(other |> MapSet.new())
+    |> MapSet.to_list()
+  end
+
   @impl SubCommand
   def handle_interaction(interaction, option) do
-    guild_roles = interaction.guild_id
+    id_by_name = interaction.guild_id
     |> Nostrum.Api.get_guild_roles!()
     |> Enum.map(fn role ->
       {role.name, role.id}
@@ -42,10 +56,10 @@ defmodule Mark.Commands.Mark.Role.Set do
     |> CommandOption.get_option("roles")
     |> String.split(",")
     
-    query = from s in Server, where: s.ref == ^(interaction.guild_id |> to_string()), preload: [:needed_roles], select: s
+    query = query_corresponding_server(interaction.guild_id)
 
-    case Repo.all(query) do
-      [] ->
+    case Repo.one(query) do
+      nil ->
         Api.create_interaction_response!(interaction, %{
           type: InteractionCallbackType.channel_message_with_source(),
           data: %{
@@ -53,22 +67,18 @@ defmodule Mark.Commands.Mark.Role.Set do
             content: "此伺服器未被設定，請使用`/mark set`來設定",
           },
         })
-      [server | _rest] ->
+      %{needed_roles: needed_roles} ->
         roles_id = roles
         |> Enum.map(fn role_name ->
-          guild_roles[role_name]
+          id_by_name[role_name]
         end)
 
-        needed_roles = server.needed_roles
+        needed_role_ids = needed_roles
         |> Enum.map(fn %Role{ref: ref} ->
           ref
         end)
-        |> MapSet.new()
-
-        roles_set = roles_id
-        |> MapSet.new()
-
-        case {needed_roles |> MapSet.intersection(roles_set) |> MapSet.to_list(), roles |> Enum.filter(fn x -> guild_roles[x] == nil end)} do
+        
+        case {intersection(roles_id, needed_role_ids), roles |> Enum.filter(fn x -> id_by_name[x] == nil end)} do
           {[], []} -> 
             confirm_id = Util.random_id()
             confirm_btn = Button.interaction_button("確定", confirm_id)

@@ -46,8 +46,8 @@ defmodule Mark.Commands.Mark.Set do
     id = Util.random_id()
     
     # 從資料庫查看有沒有另外一個在此伺服器的界面
-    case Repo.all(from s in Server, where: s.ref == ^(command_interaction.guild_id |> to_string())) do
-      [] ->
+    case Repo.one(from s in Server, where: s.ref == ^(command_interaction.guild_id |> to_string())) do
+      nil ->
         # Event binding 
         Listeners.add_listener(id, fn interaction ->
           # 將伺服器的資料放進資料庫
@@ -79,7 +79,7 @@ defmodule Mark.Commands.Mark.Set do
               preload: [:needed_roles],
               select: s
 
-            [%Server{needed_roles: needed_roles}] = Repo.all(query)
+            %Server{needed_roles: needed_roles} = Repo.one(query)
 
             needed_roles_id = needed_roles
             |> Enum.map(&(&1.ref))
@@ -136,6 +136,7 @@ defmodule Mark.Commands.Mark.Set do
               Api.create_interaction_response(interaction, %{
                 type: InteractionCallbackType.channel_message_with_source(),
                 data: %{
+                  flags: 1 <<< 6, #empheral
                   content: "你不能使用此功能",
                 },
               })
@@ -174,8 +175,7 @@ defmodule Mark.Commands.Mark.Set do
            ]
           }
         })
-      servers ->
-        IO.inspect(servers)
+      server ->
         Api.create_interaction_response!(command_interaction, %{
           type: 4,
           data: %{
