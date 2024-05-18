@@ -80,7 +80,10 @@ defmodule Mark.Commands do
       :ok
     else
       if match?(%CommandRouter{}, command) do
-        {:ok, {command_mod, option}} = CommandRouter.direct(command, interaction)
+        {:ok, {
+          command_mod, # Module that has the handle_interaction function inside
+          option, # not option of the command, option of the ApplicationCommandINteractionData"Option"
+        }} = CommandRouter.direct(command, interaction)
         command_mod.handle_interaction(interaction, option)
       else
         command.handle_interaction(interaction)

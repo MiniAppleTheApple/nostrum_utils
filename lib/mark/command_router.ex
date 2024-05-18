@@ -24,29 +24,18 @@ defmodule Mark.CommandRouter do
   @spec to_spec(Mark.CommandRouter.t()) :: map()
   def to_spec(%__MODULE__{level: :root, spec: spec, commands: commands}) do
     spec
-    |> Map.put(
-      :options,
-      Enum.map(
-        commands,
-        fn {key, value} ->
-          if is_map(value) do
-            to_spec(
-              value
-              |> Map.get_and_update(
-                :spec,
-                &{
-                  &1,
-                  &1
-                  |> Map.put(:name, key)
-                }
-              )
-              |> elem(1)
-            )
-          else
-            value.spec(key)
-          end
+    |> Map.put(:options,
+      Enum.map(commands, fn {key, value} ->
+        if is_map(value) do
+          to_spec(
+            value
+            |> Map.get_and_update(:spec, &{&1, &1 |> Map.put(:name, key)})
+            |> elem(1)
+          )
+        else
+          value.spec(key)
         end
-      )
+      end)
     )
   end
 
