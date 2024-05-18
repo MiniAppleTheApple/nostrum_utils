@@ -103,7 +103,10 @@ defmodule Mark.Commands.Mark.Role.Set do
             })
             Listeners.add_listener(confirm_id, fn interaction ->
               guild_id = interaction.guild_id |> Integer.to_string()
+
               server = Repo.one!(from s in Server, where: s.ref == ^guild_id, select: s)
+             
+              # store every roles into "needed_roles" attribute of the corresponding server
               role_ids 
               |> Enum.each(fn role ->
                 server                
