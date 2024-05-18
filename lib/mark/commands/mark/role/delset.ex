@@ -68,6 +68,7 @@ defmodule Mark.Commands.Mark.Role.DelSet do
               content: "已在設定中移除#{count}個身份組"
             }
           })
+          :ok
         end)
 
         Api.create_interaction_response!(interaction, %{
