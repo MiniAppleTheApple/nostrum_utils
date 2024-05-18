@@ -30,9 +30,9 @@ defmodule Mark.Commands.Mark.Role.Set do
     }
   end
 
-  @spec query_corresponding_server(String.t()) :: Queryable.t()
-  defp query_corresponding_server(guild_id) do
-    from s in Server, where: s.ref == ^(guild_id |> to_string()), preload: [:needed_roles], select: s
+  @spec query_corresponding_server(String.t(), [atom()]) :: Queryable.t()
+  defp query_corresponding_server(guild_id, preload \\ []) do
+    from s in Server, where: s.ref == ^(guild_id |> to_string()), preload: ^preload, select: s
   end
 
   @spec intersection(list(), list()) :: list()
@@ -62,7 +62,7 @@ defmodule Mark.Commands.Mark.Role.Set do
     |> CommandOption.get_option("roles")
     |> String.split(",")
     
-    query = query_corresponding_server(interaction.guild_id)
+    query = query_corresponding_server(interaction.guild_id, [:needed_roles])
 
     case Repo.one(query) do
       nil ->
