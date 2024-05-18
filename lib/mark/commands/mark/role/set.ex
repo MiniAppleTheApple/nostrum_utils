@@ -85,7 +85,7 @@ defmodule Mark.Commands.Mark.Role.Set do
         end)
         
         case {
-          intersection(role_ids, needed_role_ids) |> Enum.map(fn x -> name_by_id[x] end), # get the name of id
+          intersection(role_ids, needed_role_ids) |> Enum.map(fn x -> name_by_id[x] end), # get the name from id
           roles |> Enum.filter(fn x -> id_by_name[x] == nil end), # filter roles that doesn't exist
         } do
           {[], []} -> 
