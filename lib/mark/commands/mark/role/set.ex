@@ -84,7 +84,10 @@ defmodule Mark.Commands.Mark.Role.Set do
           ref
         end)
         
-        case {intersection(role_ids, needed_role_ids) |> Enum.map(fn x -> name_by_id[x] end), roles |> Enum.filter(fn x -> id_by_name[x] == nil end)} do
+        case {
+          intersection(role_ids, needed_role_ids) |> Enum.map(fn x -> name_by_id[x] end), # get the name of id
+          roles |> Enum.filter(fn x -> id_by_name[x] == nil end), # filter roles that doesn't exist
+        } do
           {[], []} -> 
             confirm_id = Util.random_id()
             confirm_btn = Button.interaction_button("確定", confirm_id)
@@ -129,7 +132,7 @@ defmodule Mark.Commands.Mark.Role.Set do
           {intersection_list, not_found_roles} ->
             repeated = if intersection_list == [], do: "", else: "#{intersection_list |> Enum.join(",")}爲重複的。"
             do_not_exist = if not_found_roles == [], do: "", else: "#{not_found_roles |> Enum.join(", ")}不存在。"
-  
+
             Api.create_interaction_response!(interaction, %{
               type: InteractionCallbackType.channel_message_with_source(),
               data: %{
