@@ -103,7 +103,6 @@ defmodule Mark.Commands.Mark.Role.Set do
             })
             Listeners.add_listener(confirm_id, fn interaction ->
               server = Repo.one!(query_corresponding_server(interaction.guild_id))
-             
               # store every roles into "needed_roles" attribute of the corresponding server
               role_ids 
               |> Enum.each(fn role ->
@@ -111,6 +110,7 @@ defmodule Mark.Commands.Mark.Role.Set do
                 |> Ecto.build_assoc(:needed_roles, %{ref: role |> to_string()})
                 |> Repo.insert()
               end)
+
               Api.create_interaction_response!(interaction, %{
                 type: InteractionCallbackType.channel_message_with_source(),
                 data: %{
