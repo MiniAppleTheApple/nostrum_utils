@@ -1,5 +1,8 @@
 defmodule Mark.Util do
   alias Nostrum.Struct.Interaction
+  alias Mark.Schema.Server
+
+  import Ecto.Query
   @doc """
   Gets an option by it's name from the interaction. Returns `nil` if the
   option is not present in the interaction.
@@ -26,5 +29,10 @@ defmodule Mark.Util do
       |> Map.get(:components)
       |> List.first()
     end)
+  end
+
+  @spec query_corresponding_server(String.t(), [atom()]) :: Queryable.t()
+  def query_corresponding_server(guild_id, preload \\ []) do
+    from s in Server, where: s.ref == ^(guild_id |> to_string()), preload: ^preload, select: s
   end
 end
