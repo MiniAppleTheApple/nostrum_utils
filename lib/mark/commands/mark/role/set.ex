@@ -57,7 +57,7 @@ defmodule Mark.Commands.Mark.Role.Set do
     |> CommandOption.get_option("roles")
     |> String.split(",")
     
-    query = query_corresponding_server(interaction.guild_id, [:needed_roles])
+    query = Util.query_corresponding_server(interaction.guild_id, [:needed_roles])
 
     case Repo.one(query) do
       nil ->
@@ -98,7 +98,7 @@ defmodule Mark.Commands.Mark.Role.Set do
               },
             })
             Listeners.add_listener(confirm_id, fn interaction ->
-              server = Repo.one!(query_corresponding_server(interaction.guild_id))
+              server = Repo.one!(Util.query_corresponding_server(interaction.guild_id))
               # store every roles into "needed_roles" attribute of the corresponding server
               role_ids 
               |> Enum.each(fn role ->
