@@ -29,12 +29,6 @@ defmodule Mark.Commands.Mark.Role.Set do
       ]
     }
   end
-  
-  # remove later
-  @spec query_corresponding_server(String.t(), [atom()]) :: Queryable.t()
-  defp query_corresponding_server(guild_id, preload \\ []) do
-    from s in Server, where: s.ref == ^(guild_id |> to_string()), preload: ^preload, select: s
-  end
 
   @spec intersection(list(), list()) :: list()
   defp intersection(set, other) do
