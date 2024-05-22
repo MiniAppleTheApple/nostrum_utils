@@ -52,7 +52,8 @@ defmodule Mark.Commands.Mark.Set do
         Listeners.add_listener(id, fn interaction ->
           # 將伺服器的資料放進資料庫
           name = Api.get_guild!(interaction.guild_id).name
-          {:ok, _server} = Repo.insert(%Server{ref: interaction.guild_id |> to_string(), name: name})
+          server = Server.new(interaction.guild_id, name)
+          {:ok, _server} = Repo.insert(server)
 
           # 取得用戶輸入
           [title, description, image_link] = interaction
@@ -74,10 +75,7 @@ defmodule Mark.Commands.Mark.Set do
           button = Button.interaction_button("進行修改", button_id, emoji: emoji)
 
           button_handle = fn interaction ->
-            query = from s in Server,
-              where: s.ref == ^(interaction.guild_id |> Integer.to_string()),
-              preload: [:needed_roles],
-              select: s
+            query = Util.query_corresponding_server(interaction.guild_id, [:needed_roles])
 
             %Server{needed_roles: needed_roles} = Repo.one(query)
 
