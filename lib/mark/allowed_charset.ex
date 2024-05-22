@@ -12,22 +12,33 @@ defmodule Mark.AllowedCharset do
 
   def map() do
     %{
-      english: english(),
-      chinese: chinese(),
-      japanase: japanese(),
-      korean: korean(),
-      number: number(),
-      special_symbols: special_symbols(),
+      english: {english(), "英文"},
+      chinese: {chinese(), "中文"},
+      japanese: {japanese(), "日文"},
+      korean: {korean(), "韓文"},
+      number: {number(), "數字"},
+      special_symbols: {special_symbols(), "特殊符號"},
     }
   end
 
   def none(), do: 0
-  def default(), do: none()
+  def default(), do: all()
 
   def all() do
     map()
     |> Map.values()
-    |> Enum.reduce(default(), &add/2)
+    |> Enum.map(&elem(&1, 0))
+    |> Enum.reduce(none(), &add/2)
+  end
+
+  def has(bit, charset), do: (bit &&& charset) == charset
+
+  def to_settings(bit) do
+    map()
+    |> Enum.map(fn {key, {value, _text}} ->
+      {key, has(bit, value)}
+    end)
+    |> Enum.into(%{})
   end
 
   def add(allowed, charset) do
