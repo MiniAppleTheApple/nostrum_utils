@@ -1,21 +1,34 @@
-defmodule Mark.MixProject do
+defmodule NostrumUtils.MixProject do
   use Mix.Project
+
+  @scm_url "https://github.com/MiniAppleTheApple/nostrum_utils"
 
   def project do
     [
-      app: :mark,
+      app: :nostrum_utils,
       version: "0.1.0",
       elixir: "~> 1.13",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      source_url: @scm_url,
+      deps: deps(),
+      description: "A library which provides some utilities for Nostrum, a Discord api wrapper for Elixir."
+    ]
+  end
+
+  def package do
+    [
+      licenses: ["MIT"],
+      links: %{"GitHub" => @scm_url},
+      maintainers: ["MiniAppleTheApple"],
+      files:
+        ~w(lib mix.exs README.md .formatter.exs)
     ]
   end
 
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger, :ecto],
-      mod: {Mark.Application, []}
+      extra_applications: [],
     ]
   end
 
@@ -24,12 +37,7 @@ defmodule Mark.MixProject do
     [
       {:dotenv_parser, "~> 2.0"},
       {:nostrum, github: "Kraigie/nostrum"},
-      {:hackney, github: "benoitc/hackney", branch: "master"},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
-      # Ecto
-      {:ecto, "~> 3.11"},
-      {:ecto_sql, "~> 3.11"},
-      {:postgrex, "~> 0.17.0"}
     ]
   end
 end

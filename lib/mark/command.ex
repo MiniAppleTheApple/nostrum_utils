@@ -1,4 +1,4 @@
-defmodule Mark.Command do
+defmodule NostrumUtils.Command do
   @moduledoc """
   Behaviour for application command implementations.
   """

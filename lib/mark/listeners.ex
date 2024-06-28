@@ -1,4 +1,4 @@
-defmodule Mark.Listeners do
+defmodule NostrumUtils.Listeners do
   use Agent
 
   alias Nostrum.Struct.Interaction
@@ -15,7 +15,7 @@ defmodule Mark.Listeners do
     Agent.get(__MODULE__, & &1)
   end
 
-  @spec add_listener(Strin.t(), handler()) :: :ok
+  @spec add_listener(String.t(), handler()) :: :ok
   def add_listener(id, listener) do
     Agent.update(__MODULE__, &Map.put(&1, id, listener))
   end

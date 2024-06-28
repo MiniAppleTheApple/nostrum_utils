@@ -1,11 +1,11 @@
-defmodule Mark.CommandRouter do
+defmodule NostrumUtils.CommandRouter do
   alias Nostrum.Constants.ApplicationCommandOptionType
 
   alias Nostrum.Struct.Interaction
   alias Nostrum.Struct.ApplicationCommandInteractionData
   alias Nostrum.Struct.ApplicationCommandInteractionDataOption
 
-  alias Mark.Command
+  alias NostrumUtils.Command
 
   @type level :: :root | :sub_command_group
   @type spec :: map()

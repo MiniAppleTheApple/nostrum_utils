@@ -1,4 +1,4 @@
-defmodule Mark.CommandOption do
+defmodule NostrumUtils.CommandOption do
   alias Nostrum.Struct.ApplicationCommandInteractionDataOption
 
   alias Nostrum.Constants.ApplicationCommandOptionType
