@@ -1,4 +1,4 @@
-defmodule Mark.SubCommand do
+defmodule NostrumUtils.SubCommand do
   alias Nostrum.Struct.ApplicationCommandInteractionDataOption
 
   @callback spec(name :: String.t()) :: map()
