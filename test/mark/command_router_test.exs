@@ -1,5 +1,5 @@
-defmodule Mark.Test.CommandRouter.SubCommand do
-  alias Mark.SubCommand
+defmodule NostrumUtils.Test.CommandRouter.SubCommand do
+  alias NostrumUtils.SubCommand
   
   alias Nostrum.Constants.ApplicationCommandOptionType
 
@@ -20,14 +20,14 @@ defmodule Mark.Test.CommandRouter.SubCommand do
   end
 end
 
-defmodule Mark.Test.CommandRouter do
+defmodule NostrumUtils.Test.CommandRouter do
   alias Nostrum.Constants.ApplicationCommandOptionType
 
   alias Nostrum.Struct.Interaction
   alias Nostrum.Struct.ApplicationCommandInteractionData
 
-  alias Mark.CommandRouter
-  alias Mark.Test.CommandRouter.SubCommand
+  alias NostrumUtils.CommandRouter
+  alias NostrumUtils.Test.CommandRouter.SubCommand
 
   use ExUnit.Case
 

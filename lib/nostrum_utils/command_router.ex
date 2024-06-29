@@ -21,7 +21,7 @@ defmodule NostrumUtils.CommandRouter do
 
   defstruct @enforce_keys
 
-  @spec to_spec(Mark.CommandRouter.t()) :: map()
+  @spec to_spec(NostrumUtils.CommandRouter.t()) :: map()
   def to_spec(%__MODULE__{level: :root, spec: spec, commands: commands}) do
     spec
     |> Map.put(:options,

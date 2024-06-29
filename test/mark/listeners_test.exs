@@ -1,6 +1,5 @@
-defmodule Mark.Test.ListenersTest do
-  alias Mark.Util
-  alias Mark.Listeners
+defmodule NostrumUtils.Test.ListenersTest do
+  alias NostrumUtils.Listeners
 
   alias Nostrum.Struct.Component.Button
 
@@ -9,7 +8,7 @@ defmodule Mark.Test.ListenersTest do
   use ExUnit.Case
 
   setup_all do
-    button = Button.interaction_button("Hello", Util.random_id(), style: ButtonStyle.primary())
+    button = Button.interaction_button("Hello", NostrumUtils.random_id(), style: ButtonStyle.primary())
     {
       :ok,
       %{
