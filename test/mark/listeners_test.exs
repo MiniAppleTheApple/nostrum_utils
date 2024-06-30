@@ -28,7 +28,7 @@ defmodule NostrumUtils.Test.ListenersTest do
 
   test "Trigger the undefined listener", %{interaction: interaction} do
     Listeners.start_link(%{})
-    assert Listeners.trigger("id", interaction) == :error
+    assert Listeners.trigger("id", interaction) == {:error, :listener_not_found}
   end
 
   test "Remove listener", %{button: button, interaction: interaction, handle: handle} do
@@ -37,7 +37,7 @@ defmodule NostrumUtils.Test.ListenersTest do
     Listeners.start_link(%{})
     Listeners.add_listener(id, handle)
     Listeners.remove_listener(id)
-    assert Listeners.trigger(id, interaction) == :error
+    assert Listeners.trigger(id, interaction) == {:error, :listener_not_found}
   end
 
   test "Listener can be triggered unlimited by default", %{
