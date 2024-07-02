@@ -10,7 +10,7 @@ defmodule NostrumUtils.Test.CommandRouter.SubCommand do
     %{
       name: name,
       type: ApplicationCommandOptionType.sub_command(),
-      description: "description"
+      description: "description",
     }
   end
 
@@ -33,14 +33,12 @@ defmodule NostrumUtils.Test.CommandRouter do
 
   setup_all do
     struct = %CommandRouter{
-      level: :root,
       spec: %{
         name: "root",
         description: "description"
       },
       commands: %{
         "sub_command_group" => %CommandRouter{
-          level: :sub_command_group,
           spec: %{
             description: "description"
           },
@@ -79,20 +77,17 @@ defmodule NostrumUtils.Test.CommandRouter do
 
   test "Convert layer 4 depth command router to spec" do
     struct = %CommandRouter{
-      level: :root,
       spec: %{
         name: "root",
         description: "description"
       },
       commands: %{
         "sub_command_group_group" => %CommandRouter{
-          level: :sub_command_group,
           spec: %{
             description: "description"
           },
           commands: %{
             "sub_command_group" => %CommandRouter{
-              level: :sub_command_group,
               spec: %{
                 description: "description"
               },

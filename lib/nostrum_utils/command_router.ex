@@ -7,27 +7,25 @@ defmodule NostrumUtils.CommandRouter do
 
   alias NostrumUtils.Command
 
-  @type level :: :root | :sub_command_group
   @type spec :: map()
   @type commands :: commands()
 
   @type t() :: %__MODULE__{
-          level: level(),
           spec: spec(),
           commands: commands()
         }
 
-  @enforce_keys [:level, :spec, :commands]
+  @enforce_keys [:spec, :commands]
 
   defstruct @enforce_keys
 
-  @spec to_spec(NostrumUtils.CommandRouter.t()) :: map()
-  def to_spec(%__MODULE__{level: :root, spec: spec, commands: commands}) do
+  @spec to_spec(t()) :: map()
+  def to_spec(%__MODULE__{spec: spec, commands: commands}) do
     spec
     |> Map.put(:options,
       Enum.map(commands, fn {key, value} ->
         if is_map(value) do
-          to_spec(
+          sub_command_group_to_spec(
             value
             |> Map.get_and_update(:spec, &{&1, &1 |> Map.put(:name, key)})
             |> elem(1)
@@ -39,7 +37,7 @@ defmodule NostrumUtils.CommandRouter do
     )
   end
 
-  def to_spec(%__MODULE__{level: :sub_command_group, spec: spec, commands: commands}) do
+  defp sub_command_group_to_spec(%__MODULE__{spec: spec, commands: commands}) do
     if commands
        |> Enum.any?(fn {_key, value} -> is_map(value) end) do
       spec
@@ -48,7 +46,7 @@ defmodule NostrumUtils.CommandRouter do
         :options,
         commands
         |> Enum.map(fn {key, value} ->
-          to_spec(value)
+          sub_command_group_to_spec(value)
           |> Map.put(:name, key)
         end)
       )
