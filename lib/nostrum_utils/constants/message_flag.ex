@@ -9,6 +9,9 @@ defmodule NostrumUtils.Constants.MessageFlag do
   def has_thread(), do: 1 <<< 5
   def emphemeral(), do: 1 <<< 6
   def loading(), do: 1 <<< 7
+  def failed_to_mention_some_roles_in_thread(), do: 1 <<< 8
+  def suppress_notifications(), do: 1 <<< 12
+  def is_voice_message(), do: 1 <<< 13
 
   def add(current, flag), do: current ||| flag
 end
