@@ -60,7 +60,7 @@ defmodule NostrumUtils.CommandRouter do
   end
 
   @spec direct(t(), Interaction.t()) ::
-          {:ok, {Command, ApplicationCommandInteractionDataOption}} | {:error, String.t()}
+          {:ok, {Command.t(), ApplicationCommandInteractionDataOption.t()}} | {:error, String.t()}
   def direct(router, %Interaction{data: data}) do
     direct(router, data)
   end
@@ -68,7 +68,7 @@ defmodule NostrumUtils.CommandRouter do
   @spec direct(
           t(),
           ApplicationCommandInteractionData.t() | ApplicationCommandInteractionDataOption.t()
-        ) :: {:ok, {Command, ApplicationCommandInteractionDataOption}} | {:error, String.t()}
+        ) :: {:ok, {Command.t(), ApplicationCommandInteractionDataOption.t()}} | {:error, String.t()}
   def direct(
         %__MODULE__{
           commands: commands
