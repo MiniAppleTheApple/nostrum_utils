@@ -24,14 +24,14 @@ defmodule NostrumUtils.CommandRouter do
     spec
     |> Map.put(:options,
       Enum.map(commands, fn {key, value} ->
-        if is_map(value) do
+        if match?(%__MODULE__{}, value) do
           sub_command_group_to_spec(
             value
             |> Map.get_and_update(:spec, &{&1, &1 |> Map.put(:name, key)})
             |> elem(1)
           )
         else
-          value.spec(key)
+          value.spec
         end
       end)
     )
@@ -46,8 +46,12 @@ defmodule NostrumUtils.CommandRouter do
         :options,
         commands
         |> Enum.map(fn {key, value} ->
-          sub_command_group_to_spec(value)
-          |> Map.put(:name, key)
+          if match?(%__MODULE__{}, value) do
+            sub_command_group_to_spec(value)
+            |> Map.put(:name, key)
+          else
+            value.spec
+          end
         end)
       )
     else
@@ -78,7 +82,7 @@ defmodule NostrumUtils.CommandRouter do
     first = List.first(data.options)
     command = commands[first.name]
 
-    if is_map(command) do
+    if match?(%__MODULE__{}, command) do
       command
       |> direct(first)
     else
